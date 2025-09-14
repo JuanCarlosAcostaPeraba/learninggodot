@@ -1,0 +1,92 @@
+[gd_scene load_steps=12 format=3 uid="uid://bljmw0e8kmom3"]
+
+[ext_resource type="Script" uid="uid://bx2h54s06esfi" path="res://scripts/day_night_script.gd" id="1_4idg4"]
+[ext_resource type="Material" uid="uid://bwmonc4vtw0d4" path="res://materials/silver.tres" id="1_q47hh"]
+[ext_resource type="Material" uid="uid://egi2pj2m7d2m" path="res://materials/lamp.tres" id="3_5ktnm"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5ktnm"]
+sky_top_color = Color(0.114578, 0.400392, 0.754307, 1)
+sky_horizon_color = Color(0.266612, 0.640891, 0.872171, 1)
+sun_angle_max = 70.0
+
+[sub_resource type="Sky" id="Sky_tedsa"]
+sky_material = SubResource("ProceduralSkyMaterial_5ktnm")
+
+[sub_resource type="Environment" id="Environment_jl3rn"]
+background_mode = 2
+sky = SubResource("Sky_tedsa")
+ambient_light_sky_contribution = 0.1
+tonemap_mode = 3
+volumetric_fog_enabled = true
+volumetric_fog_length = 256.0
+volumetric_fog_sky_affect = 0.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_4idg4"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_5ktnm"]
+points = PackedVector3Array(-1, 0, -1, -1, 0, 1, 1, 0, -1, 1, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_xrwd4"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_tedsa"]
+points = PackedVector3Array(0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_jl3rn"]
+points = PackedVector3Array(0.5, 0.5, 0.5, 0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5, -0.5, 0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5, 0.5, -0.5, -0.5, -0.5)
+
+[node name="Level1" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_jl3rn")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+auto_translate_mode = 1
+transform = Transform3D(0.875692, 0.0296938, 0.481957, -0.482867, 0.0497293, 0.874281, 0.00199339, -0.998321, 0.0578857, 1.39879, 5.434, 0)
+shadow_enabled = true
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -0.990922, -0.134436, 0, 0.134436, -0.990922, 0, 5.43385, 0)
+visible = false
+light_energy = 1.3
+shadow_enabled = true
+script = ExtResource("1_4idg4")
+
+[node name="Camera" type="XRCamera3D" parent="."]
+transform = Transform3D(-0.0331201, -0.202642, 0.978693, -0.00629703, 0.979253, 0.202545, -0.999432, 0.000545447, -0.033709, 2.69212, 1.4052, -0.576347)
+
+[node name="Plane" type="MeshInstance3D" parent="."]
+transform = Transform3D(5.81255, 0, 0, 0, 0.482709, 0, 0, 0, 5.42065, 0.00704598, 0.00590229, -0.00397778)
+mesh = SubResource("PlaneMesh_4idg4")
+
+[node name="StaticBody3D2" type="StaticBody3D" parent="Plane"]
+disable_mode = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Plane/StaticBody3D2"]
+shape = SubResource("ConvexPolygonShape3D_5ktnm")
+
+[node name="RigidBody3D" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.113353, 1.19658, 0.0155357)
+
+[node name="Cube" type="MeshInstance3D" parent="RigidBody3D"]
+transform = Transform3D(0.141805, 0.328166, 0.714123, 4.22612e-09, 0.931094, -0.376127, -0.201678, 0.230742, 0.502119, 0.00584948, 0.890229, 0.303171)
+material_override = ExtResource("1_q47hh")
+mesh = SubResource("BoxMesh_xrwd4")
+skeleton = NodePath("../..")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+transform = Transform3D(0.575177, 0.323686, 0.751265, 1.71416e-08, 0.918384, -0.39569, -0.818029, 0.227592, 0.528234, 0.00584948, 0.890229, 0.303171)
+shape = SubResource("ConvexPolygonShape3D_tedsa")
+
+[node name="RigidBody3D2" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.49357, 0.304745, 0.131151)
+
+[node name="Cube2" type="MeshInstance3D" parent="RigidBody3D2"]
+transform = Transform3D(0.554772, 0.190857, 0.423371, 0, 0.541514, -0.222989, -0.789008, 0.134197, 0.297683, -0.663845, 0.423372, -0.0216169)
+material_override = ExtResource("3_5ktnm")
+mesh = SubResource("BoxMesh_xrwd4")
+skeleton = NodePath("../..")
+surface_material_override/0 = ExtResource("3_5ktnm")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D2"]
+transform = Transform3D(0.554772, 0.190857, 0.423371, 0, 0.541514, -0.222989, -0.789008, 0.134197, 0.297683, -0.663845, 0.423372, -0.0216169)
+shape = SubResource("ConvexPolygonShape3D_jl3rn")
